@@ -1,0 +1,93 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  Caption = 'Main'
+  ClientHeight = 746
+  ClientWidth = 1046
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object NsGraph: TNsGraph
+    MultiResBitmap = <
+      item
+        Width = 50
+        Height = 50
+        PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          0020494441546843EDC101010000008220FFAF6E484000000000000000000070
+          A806274200013E935B380000000049454E44AE426082}
+      end>
+    Align = Client
+    Size.Width = 1046.000000000000000000
+    Size.Height = 746.000000000000000000
+    Size.PlatformDefault = False
+    LinesWidth = 2.000000000000000000
+    MinY = 10
+    MaxY = 100
+    DataSet = mtRates
+    DateField = 'RateDate'
+    KeyField = 'ValuteId'
+    ValueField = 'Rate'
+    NameField = 'ValuteName'
+    ColorField = 'Color'
+  end
+  object tmUpdateRates: TTimer
+    OnTimer = tmUpdateRatesTimer
+    Left = 40
+    Top = 40
+  end
+  object mtRates: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 40
+    Top = 112
+    object mtRatesRateDate: TDateField
+      FieldName = 'RateDate'
+    end
+    object mtRatesValuteId: TStringField
+      DisplayWidth = 256
+      FieldName = 'ValuteId'
+      Size = 256
+    end
+    object mtRatesValuteName: TStringField
+      FieldName = 'ValuteName'
+      Size = 256
+    end
+    object mtRatesCharCode: TStringField
+      FieldName = 'CharCode'
+      Size = 7
+    end
+    object mtRatesRate: TFloatField
+      FieldName = 'Rate'
+    end
+    object mtRatesColor: TLargeintField
+      FieldName = 'Color'
+    end
+  end
+  object IdHTTP1: TIdHTTP
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 40
+    Top = 184
+  end
+end

@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{0FB41F9F-D1C7-4DCA-B153-03A8601B5A7E}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Service\ValuteRatesSrvc.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Client\ValuteRatesClient.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ValuteRatesSrvc">
+        <MSBuild Projects="Service\ValuteRatesSrvc.dproj"/>
+    </Target>
+    <Target Name="ValuteRatesSrvc:Clean">
+        <MSBuild Projects="Service\ValuteRatesSrvc.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ValuteRatesSrvc:Make">
+        <MSBuild Projects="Service\ValuteRatesSrvc.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ValuteRatesClient">
+        <MSBuild Projects="Client\ValuteRatesClient.dproj"/>
+    </Target>
+    <Target Name="ValuteRatesClient:Clean">
+        <MSBuild Projects="Client\ValuteRatesClient.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ValuteRatesClient:Make">
+        <MSBuild Projects="Client\ValuteRatesClient.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ValuteRatesSrvc;ValuteRatesClient"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ValuteRatesSrvc:Clean;ValuteRatesClient:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ValuteRatesSrvc:Make;ValuteRatesClient:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
