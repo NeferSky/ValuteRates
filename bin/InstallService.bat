@@ -1,0 +1,1 @@
+ValuteRatesSrvc.exe /install
