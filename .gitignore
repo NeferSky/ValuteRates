@@ -8,5 +8,6 @@
 *.skincfg
 *.vlb
 *.res
+*.rsm
 __history/*
 __recovery/*
