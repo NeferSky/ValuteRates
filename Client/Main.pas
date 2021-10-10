@@ -56,24 +56,30 @@ begin
   NsGraph.BeginDate := Now - 90;
   NsGraph.EndDate := Now;
 
-  tmUpdateRatesTimer(Sender);
+  tmUpdateRatesTimer(Self);
+  tmUpdateRates.Interval := 500;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  //
+  mtRates.Close;
 end;
 
 procedure TfrmMain.tmUpdateRatesTimer(Sender: TObject);
 begin
   try
-    NsGraph.DrawGrid;
+    try
+      NsGraph.DrawGrid;
 
-    if GetRates then
-      RepaintGraph;
+      if GetRates then
+        RepaintGraph;
 
-  except
-    NsGraph.DrawGrid;
+    except
+      NsGraph.DrawGrid;
+    end;
+
+  finally
+    tmUpdateRates.Interval := 15 * 60 * 1000;
   end;
 end;
 

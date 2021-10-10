@@ -28,6 +28,7 @@ type
     qryUpdate: TFDQuery;
     IdHTTPServer1: TIdHTTPServer;
     qryClient: TFDQuery;
+    dbClient: TFDConnection;
     procedure tmUpdateRatesTimer(Sender: TObject);
     procedure IdHTTPServer1CommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure ServiceCreate(Sender: TObject);
@@ -88,22 +89,16 @@ end;
 function TValuteRates.GetActiveValutes: TStringArray;
 begin
   try
-    dbValuteRates.Open;
-    try
-      qryUpdate.Open('select ID from GET_ACTIVE_VALUTES');
-      SetLength(Result, qryUpdate.RecordCount);
+    qryUpdate.Open('select ID from GET_ACTIVE_VALUTES');
+    SetLength(Result, qryUpdate.RecordCount);
 
-      qryUpdate.First;
-      while not qryUpdate.Eof do
-      begin
-        Result[qryUpdate.RecNo - 1] := qryUpdate.FieldByName('ID').AsString;
-        qryUpdate.Next;
-      end;
-      qryUpdate.Close;
-
-    finally
-      dbValuteRates.Close;
+    qryUpdate.First;
+    while not qryUpdate.Eof do
+    begin
+      Result[qryUpdate.RecNo - 1] := qryUpdate.FieldByName('ID').AsString;
+      qryUpdate.Next;
     end;
+    qryUpdate.Close;
 
   except
     SetLength(Result, 0);
@@ -115,20 +110,15 @@ const
   START_DATE: String = '01.01.2021';
 begin
   try
-    dbValuteRates.Open;
-    try
-      qryUpdate.SQL.Text := 'select LAST_DATE from GET_LAST_DATE(:VALUTE)';
-      qryUpdate.Params.ParamByName('VALUTE').Value := aValute;
-      qryUpdate.Open;
+    qryUpdate.SQL.Text := 'select LAST_DATE from GET_LAST_DATE(:VALUTE)';
+    qryUpdate.Params.ParamByName('VALUTE').Value := aValute;
+    qryUpdate.Prepare;
+    qryUpdate.Open;
 
-      Result := qryUpdate.FieldByName('LAST_DATE').AsDateTime;
-      if Result = 0 then
-        Result := StrToDate(START_DATE);
-      qryUpdate.Close;
-
-    finally
-      dbValuteRates.Close;
-    end;
+    Result := qryUpdate.FieldByName('LAST_DATE').AsDateTime;
+    if Result = 0 then
+      Result := StrToDate(START_DATE);
+    qryUpdate.Close;
 
   except
     Result := StrToDate(START_DATE);
@@ -165,6 +155,7 @@ begin
         CurDate := CurDate + 1;
       end;
     end;
+
   finally
     dbValuteRates.Close;
   end;
@@ -254,23 +245,17 @@ begin
   if Assigned(CurValuteNode) then
   begin
     try
-      dbValuteRates.Open;
-      try
-        Value := CurValuteNode.ChildValues['Value'];
-        qryUpdate.SQL.Text := 'execute procedure INSERT_RATE(:ADATE, :ANAME, :ARATE)';
-        qryUpdate.Prepare;
+      Value := CurValuteNode.ChildValues['Value'];
+      qryUpdate.SQL.Text := 'execute procedure INSERT_RATE(:ADATE, :ANAME, :ARATE)';
+      qryUpdate.Prepare;
 
-        qryUpdate.ParamByName('ADATE').Value := aDate;
-        qryUpdate.ParamByName('ANAME').Value := aValute;
-        qryUpdate.ParamByName('ARATE').Value := Value;
-        qryUpdate.ExecSQL;
-        qryUpdate.Close;
+      qryUpdate.ParamByName('ADATE').Value := aDate;
+      qryUpdate.ParamByName('ANAME').Value := aValute;
+      qryUpdate.ParamByName('ARATE').Value := Value;
+      qryUpdate.ExecSQL;
+      qryUpdate.Close;
 
-        Result := True;
-
-      finally
-        dbValuteRates.Close;
-      end;
+      Result := True;
 
     except
       Result := False;
@@ -320,7 +305,7 @@ begin
   SubArr := aJsonResponse.GetValueArray('valutes');
 
   try
-    dbValuteRates.Open;
+    dbClient.Open;
     try
       qryClient.Open('select ID, NAME, CHAR_CODE, COLOR from GET_ACTIVE_VALUTES');
 
@@ -337,7 +322,7 @@ begin
       end;
 
     finally
-      dbValuteRates.Close;
+      dbClient.Close;
     end;
 
   except
@@ -355,7 +340,7 @@ begin
   SubArr := aJsonResponse.GetValueArray('rates');
 
   try
-    dbValuteRates.Open;
+    dbClient.Open;
     try
       qryClient.Open('select RATE_DATE, VALUTE_ID, VALUTE_NAME, VALUTE_CHAR_CODE, VALUTE_COLOR, RATE from GET_RATES');
 
@@ -374,7 +359,7 @@ begin
       end;
 
     finally
-      dbValuteRates.Close;
+      dbClient.Close;
     end;
 
   except

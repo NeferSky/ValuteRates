@@ -42,6 +42,7 @@ object ValuteRates: TValuteRates
       'CharacterSet=UTF8'
       'Database=P:\Firebird\VALUTERATES.FDB'
       'DriverID=FB')
+    ResourceOptions.AssignedValues = [rvKeepConnection]
     LoginPrompt = False
     Left = 24
     Top = 88
@@ -59,8 +60,21 @@ object ValuteRates: TValuteRates
     Top = 24
   end
   object qryClient: TFDQuery
-    Connection = dbValuteRates
-    Left = 160
-    Top = 88
+    Connection = dbClient
+    Left = 96
+    Top = 152
+  end
+  object dbClient: TFDConnection
+    Params.Strings = (
+      'Database=P:\Firebird\VALUTERATES.FDB'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'Protocol=TCPIP'
+      'Server=127.0.0.1'
+      'CharacterSet=UTF8'
+      'DriverID=FB')
+    LoginPrompt = False
+    Left = 24
+    Top = 152
   end
 end
